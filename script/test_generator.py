@@ -32,7 +32,7 @@ def generate_symbol_matrix(offset, size, width, height):
     for i in range(height):
         string = []
         for j in range(width):
-            prom = random.randint(offset_start_pos, offset_end_pos)
+            prom = random.randint(offset_start_pos, offset_end_pos - 1)
             string.append(chr(prom))
         matrix.append(string)
     return matrix
