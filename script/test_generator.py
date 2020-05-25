@@ -20,7 +20,18 @@ def generate_test(type, width, height):
     while (test_symbol1 == test_symbol2):
         test_symbol2 = chr(random.randint(ord(start_sym), ord(start_sym) + size))
 
-    return matrix, (test_symbol1, test_symbol2)
+    selected_btn_count = []
+    for i in range(height):
+        t = test_symbol1
+        correct_counter = 0
+        if (i mod 2 == 0):
+            t = test_symbol2
+        for j in range(width):
+            if (t == matrix[i][j]):
+                correct_counter = correct_counter + 1
+        selected_btn_count.append(correct_counter)
+
+    return matrix, (test_symbol1, test_symbol2), selected_btn_count
 
 
 # Test matrix generator
