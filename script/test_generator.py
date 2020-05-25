@@ -15,16 +15,16 @@ def generate_test(type, width, height):
         return None
 
     matrix = generate_symbol_matrix(start_sym, size, width, height)
-    test_symbol1 = chr(random.randint(ord(start_sym), ord(start_sym) + size))
-    test_symbol2 = chr(random.randint(ord(start_sym), ord(start_sym) + size))
+    test_symbol1 = chr(random.randint(ord(start_sym), ord(start_sym) + size - 1))
+    test_symbol2 = chr(random.randint(ord(start_sym), ord(start_sym) + size - 1))
     while (test_symbol1 == test_symbol2):
-        test_symbol2 = chr(random.randint(ord(start_sym), ord(start_sym) + size))
+        test_symbol2 = chr(random.randint(ord(start_sym), ord(start_sym) + size - 1))
 
     selected_btn_count = []
     for i in range(height):
         t = test_symbol1
         correct_counter = 0
-        if (i mod 2 == 0):
+        if (i % 2 == 1):
             t = test_symbol2
         for j in range(width):
             if (t == matrix[i][j]):
