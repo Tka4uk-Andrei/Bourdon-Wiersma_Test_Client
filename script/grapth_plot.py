@@ -1,13 +1,13 @@
 from matplotlib import pyplot as plt
 
 
-def print_plot_for(time_arr, val_arr):
+def print_plot(time_arr, val_arr):
     plt.plot(time_arr, val_arr, label = 'Показактель пользователя = Unknown') 
     plt.xlabel('Время в секундах') 
     plt.ylabel('Показатель коэффициента')
     plt.title('Переключаемость внимания')
     plt.legend()
-    plt.show() 
+    plt.show()
 
 
 if __name__ == '__main__':
