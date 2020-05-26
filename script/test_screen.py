@@ -2,8 +2,12 @@ from tkinter import *
 import test_generator
 import main
 import analize
+import grapth_plot
 from datetime import datetime, date, time
-from tkinter import messagebox  
+from tkinter import messagebox
+import db_worker
+
+TIME_DIV = 10
 
 statistics_list = []
 
@@ -23,6 +27,9 @@ time_sek = 0
 
 btn_matrix = []
 btn_selected_matrix = []
+
+concentrate_params = []
+timings = []
 
 class CallBtn:
     def __init__(self, x, y, btn):
@@ -111,7 +118,7 @@ def generate_test_window(table_width, table_height, test_type):
     global clock
     clock = Label(window, text='00:00')
     clock.grid(column=0, row=6)
-    btn = Button(window, text="Остановить тест", command=(lambda : stop()))
+    btn = Button(window, text="Остановить тест", command=stop)
     btn.grid(column=0, row=7)
 
     global wrong_str_count, passed_str_count, correct_test_counter, wrong_test_counter, btn_matrix, btn_selected_matrix
@@ -147,10 +154,14 @@ def move_to_main_window(window):
 
 
 def tick():
-    global time_sek, after_id, window
+    global time_sek, after_id, window, timings, concentrate_params, TIME_DIV
     after_id = window.after(1000, tick)
     stamp_time = datetime.fromtimestamp(time_sek + 900000).strftime("%M:%S")
     clock.configure(text=str(stamp_time))
+    if (time_sek % TIME_DIV == 0):
+        timings.append(time_sek)
+        concentrate_params.append(analize.calculate_attention_switch(passed_str_count, wrong_str_count))
+
     #todo tick measuares for graphic
     time_sek += 1
 
@@ -159,7 +170,7 @@ def print_answers():
     global symbols, btn_matrix, t_width, t_height
     for i in range(t_height):
         for j in range(t_width):
-            if (btn_matrix[i][j]['text'] == symbols[(i + 1) % 2]):
+            if (btn_matrix[i][j]['text'] == symbols[i % 2]):
                 if (btn_selected_matrix[i][j] == True):
                     btn_matrix[i][j].configure(fg = 'white', bg = 'green')
                 else:
@@ -169,10 +180,12 @@ def print_answers():
 
 
 def stop():
-    global time_sek, after_id, window, wrong_str_count, passed_str_count
-    messagebox.showinfo('Результаты', f'время в секундах {time_sek} || количество пройденных строк {passed_str_count} || количество ошибочных строк {wrong_str_count}')
+    global time_sek, after_id, window, wrong_str_count, passed_str_count, timings, concentrate_params
     window.after_cancel(after_id)
     print_answers()
+    messagebox.showinfo('Результаты', f'время в секундах {time_sek} || количество пройденных строк {passed_str_count} || количество ошибочных строк {wrong_str_count}, || итоговый показатель переключаемости внимания {analize.calculate_attention_switch(passed_str_count, wrong_str_count)}')
+    db_worker.add_new_test_results(timings, concentrate_params)
+    grapth_plot.print_plot(timings, concentrate_params)
     # window.destroy()
     # make results
     # Results()
