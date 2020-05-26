@@ -21,6 +21,8 @@ def add_new_test_results(timings, concentrate_params):
     conn.close()
 
 
+def get_pass
+
 
 if __name__ == '__main__':
     conn = sqlite3.connect("statistics.db")
